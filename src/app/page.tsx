@@ -9,6 +9,15 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 5,
+    total: 0,
+    totalPages: 0,
+    hasNext: false,
+    hasPrev: false
+  });
 
   useEffect(() => {
     const fetchAdvocates = async () => {
@@ -16,7 +25,7 @@ export default function Home() {
         setIsLoading(true);
         setError(null);
         
-        const response = await fetch("/api/advocates?page=1");
+        const response = await fetch(`/api/advocates?page=${currentPage}`);
         
         if (!response.ok) {
           throw new Error(`status: ${response.status}`);
@@ -24,6 +33,7 @@ export default function Home() {
         
         const jsonResponse = await response.json();
         setAdvocates(jsonResponse.data);
+        setPagination(jsonResponse.pagination);
       } catch (err) {
         console.error("Error fetching advocates:", err);
         setError(err instanceof Error ? err.message : "Failed to fetch advocates");
@@ -33,7 +43,7 @@ export default function Home() {
     };
 
     fetchAdvocates();
-  }, []);
+  }, [currentPage]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchTerm = e.target.value.toLowerCase();
