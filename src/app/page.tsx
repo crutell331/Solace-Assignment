@@ -16,6 +16,7 @@ type Advocate = {
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,18 +62,13 @@ export default function Home() {
         advocate.specialties.some((specialty) => specialty.toLowerCase().includes(searchTerm))
       );
     });
-
+    setSearchTerm(searchTerm);
     setFilteredAdvocates(filteredAdvocates);
   };
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent form submission
-    setFilteredAdvocates(advocates);
-  };
-
   const onClick = () => {
-    console.log(advocates);
     setFilteredAdvocates(advocates);
+    setSearchTerm("");
   };
 
   if (isLoading) {
@@ -121,18 +117,19 @@ export default function Home() {
       </main>
     );
   }
-
+console.log('searchTerm: ', searchTerm);
   return (
     <main style={{ margin: "24px" }}>
       <h1>Solace Advocates</h1>
       <br />
       <br />
-      <form onSubmit={onSubmit}>
+      <form>
         <p>Search</p>
         <input 
           type="search"
           placeholder="Search advocates..."
           style={{ border: "1px solid black" }} 
+          value={searchTerm}
           onChange={onChange} 
         />
         <button type="button" onClick={onClick}>Reset Search</button>
