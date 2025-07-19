@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import TableRow from "./components/TableRow";
 import { Advocate } from "@/types/advocate";
 
@@ -171,24 +171,24 @@ export default function Home() {
         </div>
       ) : (
         <>
-        <table className="table-auto border-collapse border border-gray-300 table-bordered">
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>City</th>
-              <th>Degree</th>
-              <th>Specialties</th>
-              <th>Years of Experience</th>
-              <th>Phone Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAdvocates.map((advocate, index) => (
-              <TableRow key={index} advocate={advocate} />
-            ))}
-          </tbody>
-        </table>
+          <table className="table-auto border-collapse border border-gray-300 table-bordered">
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>City</th>
+                <th>Degree</th>
+                <th>Specialties</th>
+                <th>Years of Experience</th>
+                <th>Phone Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredAdvocates.map((advocate, index) => (
+                <TableRow key={index} advocate={advocate} />
+              ))}
+            </tbody>
+          </table>
           
           <div className="flex justify-center items-center py-4 gap-4">
             <div style={{ fontSize: "14px", color: "#666" }}>
