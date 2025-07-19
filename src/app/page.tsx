@@ -44,30 +44,27 @@ export default function Home() {
     };
 
     fetchAdvocates();
-  }, [currentPage]);
+  }, [currentPage, debouncedSearchTerm]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setCurrentPage(1);
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchTerm = e.target.value.toLowerCase();
     setSearchTerm(newSearchTerm);
   };
 
-  const filteredAdvocates = useMemo(() => {
-    if (!searchTerm) return advocates;
-    
-    return advocates.filter((advocate: Advocate) => {
-      return (
-        advocate.firstName.toLowerCase().includes(searchTerm) ||
-        advocate.lastName.toLowerCase().includes(searchTerm) ||
-        advocate.city.toLowerCase().includes(searchTerm) ||
-        advocate.degree.toLowerCase().includes(searchTerm) ||
-        advocate.yearsOfExperience.toString().includes(searchTerm) ||
-        advocate.specialties.some((specialty) => specialty.toLowerCase().includes(searchTerm))
-      );
-    });
-  }, [advocates, searchTerm]);
+  const filteredAdvocates = advocates;
 
   const onClick = () => {
     setSearchTerm("");
+    setDebouncedSearchTerm("");
   };
 
   const handlePageChange = (newPage: number) => {
