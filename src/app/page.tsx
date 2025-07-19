@@ -18,6 +18,7 @@ export default function Home() {
     hasNext: false,
     hasPrev: false
   });
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchAdvocates = async () => {
@@ -25,7 +26,7 @@ export default function Home() {
         setIsLoading(true);
         setError(null);
         
-        const response = await fetch(`/api/advocates?page=${currentPage}`);
+        const response = await fetch(`/api/advocates?page=${currentPage}&search=${debouncedSearchTerm}`);
         
         if (!response.ok) {
           throw new Error(`status: ${response.status}`);
