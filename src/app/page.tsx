@@ -14,17 +14,36 @@ type Advocate = {
 }
 
 export default function Home() {
-  const [advocates, setAdvocates] = useState([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState([]);
+  const [advocates, setAdvocates] = useState<Advocate[]>([]);
+  const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
-      response.json().then((jsonResponse) => {
+    const fetchAdvocates = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        console.log("fetching advocates...");
+        
+        const response = await fetch("/api/advocates");
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const jsonResponse = await response.json();
         setAdvocates(jsonResponse.data);
         setFilteredAdvocates(jsonResponse.data);
-      });
-    });
+      } catch (err) {
+        console.error("Error fetching advocates:", err);
+        setError(err instanceof Error ? err.message : "Failed to fetch advocates");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAdvocates();
   }, []);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +75,53 @@ export default function Home() {
     setFilteredAdvocates(advocates);
   };
 
+  if (isLoading) {
+    return (
+      <main style={{ margin: "24px" }}>
+        <h1>Solace Advocates</h1>
+        <div style={{ 
+          display: "flex", 
+          justifyContent: "center", 
+          alignItems: "center", 
+          height: "200px",
+          fontSize: "18px"
+        }}>
+          Loading advocates...
+        </div>
+      </main>
+    );
+  }
+  if (error) {
+    return (
+      <main style={{ margin: "24px" }}>
+        <h1>Solace Advocates</h1>
+        <div style={{ 
+          color: "red", 
+          padding: "20px", 
+          border: "1px solid red", 
+          borderRadius: "4px",
+          margin: "20px 0"
+        }}>
+          <h3>Error loading advocates:</h3>
+          <p>{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            style={{ 
+              padding: "8px 16px", 
+              backgroundColor: "#007bff", 
+              color: "white", 
+              border: "none", 
+              borderRadius: "4px",
+              cursor: "pointer"
+            }}
+          >
+            Try Again
+          </button>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main style={{ margin: "24px" }}>
       <h1>Solace Advocates</h1>
@@ -79,23 +145,23 @@ export default function Home() {
         </div>
       ) : (
         <table className="table-auto border-collapse border border-gray-300 table-bordered">
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>City</th>
-            <th>Degree</th>
-            <th>Specialties</th>
-            <th>Years of Experience</th>
-            <th>Phone Number</th>
-          </tr>
-        </thead>
-        <tbody>
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>City</th>
+              <th>Degree</th>
+              <th>Specialties</th>
+              <th>Years of Experience</th>
+              <th>Phone Number</th>
+            </tr>
+          </thead>
+          <tbody>
             {filteredAdvocates.map((advocate, index) => (
               <TableRow key={index} advocate={advocate} />
             ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
       )}
     </main>
   );

@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 type Advocate = {
     firstName: string;
     lastName: string;
