@@ -16,7 +16,7 @@ export default function Home() {
         setIsLoading(true);
         setError(null);
         
-        const response = await fetch("/api/advocates");
+        const response = await fetch("/api/advocates?page=1");
         
         if (!response.ok) {
           throw new Error(`status: ${response.status}`);
