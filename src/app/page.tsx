@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import TableRow from "./components/TableRow";
 import { Advocate } from "@/types/advocate";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -16,17 +15,15 @@ export default function Home() {
       try {
         setIsLoading(true);
         setError(null);
-        console.log("fetching advocates...");
         
         const response = await fetch("/api/advocates");
         
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`status: ${response.status}`);
         }
         
         const jsonResponse = await response.json();
         setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
       } catch (err) {
         console.error("Error fetching advocates:", err);
         setError(err instanceof Error ? err.message : "Failed to fetch advocates");
@@ -39,11 +36,14 @@ export default function Home() {
   }, []);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = e.target.value.toLowerCase();
+    const newSearchTerm = e.target.value.toLowerCase();
+    setSearchTerm(newSearchTerm);
+  };
 
-    console.log("filtering advocates...", searchTerm);
-    const filteredAdvocates = advocates.filter((advocate: Advocate) => {
-      console.log(advocate.yearsOfExperience.toString().includes(searchTerm));
+  const filteredAdvocates = useMemo(() => {
+    if (!searchTerm) return advocates;
+    
+    return advocates.filter((advocate: Advocate) => {
       return (
         advocate.firstName.toLowerCase().includes(searchTerm) ||
         advocate.lastName.toLowerCase().includes(searchTerm) ||
@@ -53,12 +53,9 @@ export default function Home() {
         advocate.specialties.some((specialty) => specialty.toLowerCase().includes(searchTerm))
       );
     });
-    setSearchTerm(searchTerm);
-    setFilteredAdvocates(filteredAdvocates);
-  };
+  }, [advocates, searchTerm]);
 
   const onClick = () => {
-    setFilteredAdvocates(advocates);
     setSearchTerm("");
   };
 

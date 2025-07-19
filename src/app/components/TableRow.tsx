@@ -11,11 +11,11 @@ export default function TableRow({ advocate }: { advocate: Advocate }) {
             <td>{city}</td>
             <td>{degree}</td>
             <td>
-                {specialties.map((s) => (
-                <ul key={s}>
-                    <li>{s}</li>
+                <ul>
+                    {specialties.map((s) => (
+                        <li key={s}>{s}</li>
+                    ))}
                 </ul>
-                ))}
             </td>
             <td>{yearsOfExperience}</td>
             <td>{phoneNumber}</td>
