@@ -3,6 +3,15 @@
 import { useEffect, useState } from "react";
 import TableRow from "./components/TableRow";
 
+type Advocate = {
+  firstName: string;
+  lastName: string;
+  city: string;
+  degree: string;
+  specialties: string[];
+  yearsOfExperience: number;
+  phoneNumber: string;
+}
 
 export default function Home() {
   const [advocates, setAdvocates] = useState([]);
@@ -18,24 +27,28 @@ export default function Home() {
     });
   }, []);
 
-  const onChange = (e) => {
-    const searchTerm = e.target.value;
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = e.target.value.toLowerCase();
 
-    document.getElementById("search-term").innerHTML = searchTerm;
-
-    console.log("filtering advocates...");
-    const filteredAdvocates = advocates.filter((advocate) => {
+    console.log("filtering advocates...", searchTerm);
+    const filteredAdvocates = advocates.filter((advocate: Advocate) => {
+      console.log(advocate.yearsOfExperience.toString().includes(searchTerm));
       return (
-        advocate.firstName.includes(searchTerm) ||
-        advocate.lastName.includes(searchTerm) ||
-        advocate.city.includes(searchTerm) ||
-        advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience.includes(searchTerm)
+        advocate.firstName.toLowerCase().includes(searchTerm) ||
+        advocate.lastName.toLowerCase().includes(searchTerm) ||
+        advocate.city.toLowerCase().includes(searchTerm) ||
+        advocate.degree.toLowerCase().includes(searchTerm) ||
+        advocate.yearsOfExperience.toString().includes(searchTerm) ||
+        advocate.specialties.some((specialty) => specialty.toLowerCase().includes(searchTerm))
       );
     });
 
     setFilteredAdvocates(filteredAdvocates);
+  };
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent form submission
+    setFilteredAdvocates(advocates);
   };
 
   const onClick = () => {
@@ -48,17 +61,24 @@ export default function Home() {
       <h1>Solace Advocates</h1>
       <br />
       <br />
-      <div>
+      <form onSubmit={onSubmit}>
         <p>Search</p>
-        <p>
-          Searching for: <span id="search-term"></span>
-        </p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} />
-        <button onClick={onClick}>Reset Search</button>
-      </div>
+        <input 
+          type="search"
+          placeholder="Search advocates..."
+          style={{ border: "1px solid black" }} 
+          onChange={onChange} 
+        />
+        <button type="button" onClick={onClick}>Reset Search</button>
+      </form>
       <br />
       <br />
-      <table className="table-auto">
+      {filteredAdvocates.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "20px" }}>
+          No advocates found matching your search criteria.
+        </div>
+      ) : (
+        <table className="table-auto border-collapse border border-gray-300 table-bordered">
         <thead>
           <tr>
             <th>First Name</th>
@@ -71,9 +91,12 @@ export default function Home() {
           </tr>
         </thead>
         <tbody>
-          {filteredAdvocates.map((advocate) => <TableRow advocate={advocate} />)}
+            {filteredAdvocates.map((advocate, index) => (
+              <TableRow key={index} advocate={advocate} />
+            ))}
         </tbody>
       </table>
+      )}
     </main>
   );
 }
