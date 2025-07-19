@@ -2,16 +2,7 @@
 
 import { useEffect, useState } from "react";
 import TableRow from "./components/TableRow";
-
-type Advocate = {
-  firstName: string;
-  lastName: string;
-  city: string;
-  degree: string;
-  specialties: string[];
-  yearsOfExperience: number;
-  phoneNumber: string;
-}
+import { Advocate } from "@/types/advocate";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);

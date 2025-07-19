@@ -1,14 +1,6 @@
 "use client";
 
-type Advocate = {
-    firstName: string;
-    lastName: string;
-    city: string;
-    degree: string;
-    specialties: string[];
-    yearsOfExperience: number;
-    phoneNumber: string;
-}
+import { Advocate } from "@/types/advocate";
 
 export default function TableRow({ advocate }: { advocate: Advocate }) {
     const {firstName, lastName, city, degree, specialties, yearsOfExperience, phoneNumber} = advocate;
