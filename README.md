@@ -1,9 +1,8 @@
 ## How to navigate this repo & the applied changes
-- 3 available PRs opened against `main` branch
-- Branches are scoped to specific category of improvements and created in this order: 
-    1. `components_and_typescript`
-    2. `backend_changes` 
-    3. `styling_improvements`
+- 3 available PRs opened against each other to make it easier to see changes by order of implementation
+    1. `components_and_typescript` -> `main`
+    2. `backend_changes` -> `components_and_typescript`
+    3. `styling_improvements` -> `backend_changes`
 - `styling_improvements` branch includes all changes
 
 ## Key Improvements
@@ -11,7 +10,7 @@
 ### **Frontend:**
 - Full TypeScript implementation with proper interfaces
 - Tailwind CSS with consistent design theme
--  Modular component architecture
+- Modular component architecture
 - Extracted `TableRow` component for reusability
 - Proper prop typing and component separation
 - Clean, maintainable code structure
@@ -20,7 +19,7 @@
 - Accessibility compliance
 
 ### **Backend:**
-- Handle live, RESTful, requests
+- Handle live, REST, request
 
 ### **Performance Optimizations**
 - Debounce to prevent excessive API calls
