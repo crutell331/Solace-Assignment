@@ -86,7 +86,7 @@ export default function Home() {
         <button
           key="prev"
           onClick={() => handlePageChange(currentPage - 1)}
-          className="px-3 py-1 rounded-md bg-white text-black border border-gray-300"
+          className="px-3 py-1 rounded-md bg-white text-black border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#274239] focus:ring-opacity-50"
         >
           Previous
         </button>
@@ -98,7 +98,11 @@ export default function Home() {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`px-3 py-1 rounded-md ${i === currentPage ? 'bg-[#274239] text-white' : 'bg-white text-black'}`}
+          className={`px-3 py-1 rounded-md transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-opacity-50 ${
+            i === currentPage 
+              ? 'bg-[#274239] text-white focus:ring-white' 
+              : 'bg-white text-black border border-gray-300 hover:bg-gray-50 focus:ring-[#274239]'
+          }`}
         >
           {i}
         </button>
@@ -110,7 +114,7 @@ export default function Home() {
         <button
           key="next"
           onClick={() => handlePageChange(currentPage + 1)}
-          className="px-3 py-1 rounded-md bg-white text-black border border-gray-300"
+          className="px-3 py-1 rounded-md bg-white text-black border border-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-[#274239] focus:ring-opacity-50"
         >
           Next
         </button>
@@ -135,7 +139,7 @@ export default function Home() {
             <p>{error}</p>
             <button 
               onClick={() => window.location.reload()} 
-              className="px-4 py-2 mt-3 bg-[#274239] text-white rounded-md cursor-pointer"
+              className="px-4 py-2 mt-3 bg-[#274239] text-white rounded-md cursor-pointer hover:bg-[#1a2d26] focus:ring-2 focus:ring-[#274239] focus:ring-opacity-50"
             >
               Try Again
             </button>
@@ -150,9 +154,15 @@ export default function Home() {
             placeholder="Search advocates..."
             value={searchTerm}
             onChange={onChange} 
-            className="border-b border-t-0 border-l-0 border-r-0 border-black mr-4 focus:outline-none"
+            className="border-b border-t-0 border-l-0 border-r-0 border-black mr-4 focus:outline-none focus:border-[#274239] focus:border-b-2 transition-all px-2 py-1"
           />
-          <button className="text-sm text-[white] bg-[#274239] rounded-md px-2 py-1 border border-[#274239]" onClick={onClick}>Reset Search</button>
+          <button 
+            type="button"
+            className="text-sm text-white bg-[#274239] rounded-md px-2 py-1 border border-[#274239] hover:bg-[#1a2d26] focus:ring-2 focus:ring-[#274239] focus:ring-opacity-50" 
+            onClick={onClick}
+          >
+            Reset Search
+          </button>
         </form>
         <br />
         <br />
