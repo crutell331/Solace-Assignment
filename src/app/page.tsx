@@ -143,7 +143,7 @@ export default function Home() {
       );
     }
     return (
-      <div className="m-4">
+      <div className="m-4 flex flex-col items-center">
         <form>
           <input 
             type="search"
