@@ -1,91 +1,153 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import TableRow from "./components/TableRow";
+import { Advocate } from "@/types/advocate";
 
 export default function Home() {
-  const [advocates, setAdvocates] = useState([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState([]);
+  const [advocates, setAdvocates] = useState<Advocate[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
-      response.json().then((jsonResponse) => {
+    const fetchAdvocates = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const response = await fetch("/api/advocates");
+        
+        if (!response.ok) {
+          throw new Error(`status: ${response.status}`);
+        }
+        
+        const jsonResponse = await response.json();
         setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
-      });
-    });
+      } catch (err) {
+        console.error("Error fetching advocates:", err);
+        setError(err instanceof Error ? err.message : "Failed to fetch advocates");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAdvocates();
   }, []);
 
-  const onChange = (e) => {
-    const searchTerm = e.target.value;
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchTerm = e.target.value.toLowerCase();
+    setSearchTerm(newSearchTerm);
+  };
 
-    document.getElementById("search-term").innerHTML = searchTerm;
-
-    console.log("filtering advocates...");
-    const filteredAdvocates = advocates.filter((advocate) => {
+  const filteredAdvocates = useMemo(() => {
+    if (!searchTerm) return advocates;
+    
+    return advocates.filter((advocate: Advocate) => {
       return (
-        advocate.firstName.includes(searchTerm) ||
-        advocate.lastName.includes(searchTerm) ||
-        advocate.city.includes(searchTerm) ||
-        advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience.includes(searchTerm)
+        advocate.firstName.toLowerCase().includes(searchTerm) ||
+        advocate.lastName.toLowerCase().includes(searchTerm) ||
+        advocate.city.toLowerCase().includes(searchTerm) ||
+        advocate.degree.toLowerCase().includes(searchTerm) ||
+        advocate.yearsOfExperience.toString().includes(searchTerm) ||
+        advocate.specialties.some((specialty) => specialty.toLowerCase().includes(searchTerm))
       );
     });
-
-    setFilteredAdvocates(filteredAdvocates);
-  };
+  }, [advocates, searchTerm]);
 
   const onClick = () => {
-    console.log(advocates);
-    setFilteredAdvocates(advocates);
+    setSearchTerm("");
   };
 
+  if (isLoading) {
+    return (
+      <main style={{ margin: "24px" }}>
+        <h1>Solace Advocates</h1>
+        <div style={{ 
+          display: "flex", 
+          justifyContent: "center", 
+          alignItems: "center", 
+          height: "200px",
+          fontSize: "18px"
+        }}>
+          Loading advocates...
+        </div>
+      </main>
+    );
+  }
+  if (error) {
+    return (
+      <main style={{ margin: "24px" }}>
+        <h1>Solace Advocates</h1>
+        <div style={{ 
+          color: "red", 
+          padding: "20px", 
+          border: "1px solid red", 
+          borderRadius: "4px",
+          margin: "20px 0"
+        }}>
+          <h3>Error loading advocates:</h3>
+          <p>{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            style={{ 
+              padding: "8px 16px", 
+              backgroundColor: "#007bff", 
+              color: "white", 
+              border: "none", 
+              borderRadius: "4px",
+              cursor: "pointer"
+            }}
+          >
+            Try Again
+          </button>
+        </div>
+      </main>
+    );
+  }
+console.log('searchTerm: ', searchTerm);
   return (
     <main style={{ margin: "24px" }}>
       <h1>Solace Advocates</h1>
       <br />
       <br />
-      <div>
+      <form>
         <p>Search</p>
-        <p>
-          Searching for: <span id="search-term"></span>
-        </p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} />
-        <button onClick={onClick}>Reset Search</button>
-      </div>
+        <input 
+          type="search"
+          placeholder="Search advocates..."
+          style={{ border: "1px solid black" }} 
+          value={searchTerm}
+          onChange={onChange} 
+        />
+        <button type="button" onClick={onClick}>Reset Search</button>
+      </form>
       <br />
       <br />
-      <table>
-        <thead>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>City</th>
-          <th>Degree</th>
-          <th>Specialties</th>
-          <th>Years of Experience</th>
-          <th>Phone Number</th>
-        </thead>
-        <tbody>
-          {filteredAdvocates.map((advocate) => {
-            return (
-              <tr>
-                <td>{advocate.firstName}</td>
-                <td>{advocate.lastName}</td>
-                <td>{advocate.city}</td>
-                <td>{advocate.degree}</td>
-                <td>
-                  {advocate.specialties.map((s) => (
-                    <div>{s}</div>
-                  ))}
-                </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      {filteredAdvocates.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "20px" }}>
+          No advocates found matching your search criteria.
+        </div>
+      ) : (
+        <table className="table-auto border-collapse border border-gray-300 table-bordered">
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>City</th>
+              <th>Degree</th>
+              <th>Specialties</th>
+              <th>Years of Experience</th>
+              <th>Phone Number</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredAdvocates.map((advocate, index) => (
+              <TableRow key={index} advocate={advocate} />
+            ))}
+          </tbody>
+        </table>
+      )}
     </main>
   );
 }
