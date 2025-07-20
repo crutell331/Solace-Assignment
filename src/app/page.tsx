@@ -50,7 +50,7 @@ export default function Home() {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
       setCurrentPage(1);
-    }, 200);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [searchTerm]);
