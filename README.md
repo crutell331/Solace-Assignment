@@ -1,41 +1,28 @@
-## Solace Candidate Assignment
+## How to navigate this repo & the applied changes
+- 3 available PRs opened against each other to make it easier to see changes by order of implementation
+    1. `components_and_typescript` -> `main`
+    2. `backend_changes` -> `components_and_typescript`
+    3. `styling_improvements` -> `backend_changes`
+- `styling_improvements` branch includes all changes
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Key Improvements
 
-## Getting Started
+### **Frontend:**
+- Full TypeScript implementation with proper interfaces
+- Tailwind CSS with consistent design theme
+- Modular component architecture
+- Extracted `TableRow` component for reusability
+- Proper prop typing and component separation
+- Clean, maintainable code structure
+- Loading & Error states
+- Error handling
+- Accessibility compliance
 
-Install dependencies
+### **Backend:**
+- Handle live, REST, request
 
-```bash
-npm i
-```
-
-Run the development server:
-
-```bash
-npm run dev
-```
-
-## Database set up
-
-The app is configured to return a default list of advocates. This will allow you to get the app up and running without needing to configure a database. If you’d like to configure a database, you’re encouraged to do so. You can uncomment the url in `.env` and the line in `src/app/api/advocates/route.ts` to test retrieving advocates from the database.
-
-1. Feel free to use whatever configuration of postgres you like. The project is set up to use docker-compose.yml to set up postgres. The url is in .env.
-
-```bash
-docker compose up -d
-```
-
-2. Create a `solaceassignment` database.
-
-3. Push migration to the database
-
-```bash
-npx drizzle-kit push
-```
-
-4. Seed the database
-
-```bash
-curl -X POST http://localhost:3000/api/seed
-```
+### **Performance Optimizations**
+- Debounce to prevent excessive API calls
+- Moved filtering logic to server
+- Correct useEffect dependency arrays
+- Correct state management for the search form, as well as, other actions

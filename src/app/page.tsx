@@ -50,7 +50,7 @@ export default function Home() {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
       setCurrentPage(1);
-    }, 200);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [searchTerm]);
@@ -86,7 +86,7 @@ export default function Home() {
         <button
           key="prev"
           onClick={() => handlePageChange(currentPage - 1)}
-          className="px-3 py-1 rounded-md bg-white text-black border border-gray-300"
+          className="px-3 py-1 rounded-md bg-white text-black border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#274239] focus:ring-opacity-50"
         >
           Previous
         </button>
@@ -98,7 +98,11 @@ export default function Home() {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`px-3 py-1 rounded-md ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-white text-black'}`}
+          className={`px-3 py-1 rounded-md transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-opacity-50 ${
+            i === currentPage 
+              ? 'bg-[#274239] text-white focus:ring-white' 
+              : 'bg-white text-black border border-gray-300 hover:bg-gray-50 focus:ring-[#274239]'
+          }`}
         >
           {i}
         </button>
@@ -110,7 +114,7 @@ export default function Home() {
         <button
           key="next"
           onClick={() => handlePageChange(currentPage + 1)}
-          className="px-3 py-1 rounded-md bg-white text-black border border-gray-300"
+          className="px-3 py-1 rounded-md bg-white text-black border border-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-[#274239] focus:ring-opacity-50"
         >
           Next
         </button>
@@ -120,86 +124,93 @@ export default function Home() {
     return pages;
   };
 
-  if (isLoading) {
+  const renderTable = () => {
+    if (isLoading) {
+      return (
+          <div className="flex justify-center items-center h-40 text-lg">
+            Loading advocates...
+          </div>
+      );
+    }
+    if (error) {
+      return (
+          <div className="text-[#274239] p-4 border w-1/2 border-[#274239] rounded-md m-4 flex flex-col items-center">
+            <h3>Error loading advocates</h3>
+            <p>{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-4 py-2 mt-3 bg-[#274239] text-white rounded-md cursor-pointer hover:bg-[#1a2d26] focus:ring-2 focus:ring-[#274239] focus:ring-opacity-50"
+            >
+              Try Again
+            </button>
+          </div>
+      );
+    }
     return (
-      <main className="m-4">
-        <h1>Solace Advocates</h1>
-        <div className="flex justify-center items-center h-40 text-lg">
-          Loading advocates...
-        </div>
-      </main>
-    );
-  }
-  if (error) {
-    return (
-      <main className="m-4">
-        <h1>Solace Advocates</h1>
-        <div className="text-red-500 p-4 border border-red-500 rounded-md m-4">
-          <h3>Error loading advocates:</h3>
-          <p>{error}</p>
+      <div className="m-4 flex flex-col items-center">
+        <form>
+          <input 
+            type="search"
+            placeholder="Search advocates..."
+            value={searchTerm}
+            onChange={onChange} 
+            className="border-b border-t-0 border-l-0 border-r-0 border-black mr-4 focus:outline-none focus:border-[#274239] focus:border-b-2 transition-all px-2 py-1"
+          />
           <button 
-            onClick={() => window.location.reload()} 
-            className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer"
+            type="button"
+            className="text-sm text-white bg-[#274239] rounded-md px-2 py-1 border border-[#274239] hover:bg-[#1a2d26] focus:ring-2 focus:ring-[#274239] focus:ring-opacity-50" 
+            onClick={onClick}
           >
-            Try Again
+            Reset Search
           </button>
-        </div>
-      </main>
-    );
+        </form>
+        <br />
+        <br />
+        {filteredAdvocates.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "20px" }}>
+            No advocates found matching your search criteria.
+          </div>
+        ) : (
+          <>
+            <table className="table-auto border-collapse border border-gray-300 table-bordered">
+              <thead className="bg-[#274239] text-white">
+                <tr>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>City</th>
+                  <th>Degree</th>
+                  <th>Specialties</th>
+                  <th>Years of Experience</th>
+                  <th>Phone Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAdvocates.map((advocate, index) => (
+                  <TableRow key={index} advocate={advocate} />
+                ))}
+              </tbody>
+            </table>
+            
+            <div className="flex justify-center items-center py-4 gap-4">
+              <div className="text-sm text-[#666]">
+                Page {pagination.page} of {pagination.totalPages} ({pagination.total} total records)
+              </div>
+              <div className="flex items-center">
+                {renderPaginationControls()}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    )
   }
 
   return (
-    <main className="m-4">
-      <h1>Solace Advocates</h1>
-      <br />
-      <br />
-      <form>
-        <input 
-          type="search"
-          placeholder="Search advocates..."
-          value={searchTerm}
-          onChange={onChange} 
-          className="border-b border-t-0 border-l-0 border-r-0 border-black mr-4"
-        />
-        <button type="button" onClick={onClick}>Reset Search</button>
-      </form>
-      <br />
-      <br />
-      {filteredAdvocates.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "20px" }}>
-          No advocates found matching your search criteria.
-        </div>
-      ) : (
-        <>
-          <table className="table-auto border-collapse border border-gray-300 table-bordered">
-            <thead>
-              <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>City</th>
-                <th>Degree</th>
-                <th>Specialties</th>
-                <th>Years of Experience</th>
-                <th>Phone Number</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAdvocates.map((advocate, index) => (
-                <TableRow key={index} advocate={advocate} />
-              ))}
-            </tbody>
-          </table>
-          
-          <div className="flex justify-center items-center py-4 gap-4">
-            <div style={{ fontSize: "14px", color: "#666" }}>
-              Page {pagination.page} of {pagination.totalPages} ({pagination.total} total records)
-            </div>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              {renderPaginationControls()}
-            </div>
-          </div>
-        </>
-      )}
+    <main className="flex flex-col items-center">
+      <h1 className="text-2xl font-bold text-white py-4 mb-[2em] flex justify-center items-center bg-[#274239] w-full h-[100px]">
+        Solace Advocates
+      </h1>
+      {renderTable()}
     </main>
-  );
+    );
 }
