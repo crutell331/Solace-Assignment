@@ -12,5 +12,8 @@
 
 ## Added Context
 - 3 available PRs opened agains `main` branch
-- Branches are scoped to specific category of improvements and created in this order: 1. Frontend, 2. Backend, 3. Styling
+- Branches are scoped to specific category of improvements and created in this order: 
+    1. `components_and_typescript`
+    2. `backend_changes` 
+    3. `styling_improvements`
 - `styling_improvements` branch includes all changes
