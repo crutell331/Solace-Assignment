@@ -130,12 +130,12 @@ export default function Home() {
     }
     if (error) {
       return (
-          <div className="text-red-500 p-4 border border-red-500 rounded-md m-4">
-            <h3>Error loading advocates:</h3>
+          <div className="text-[#274239] p-4 border w-1/2 border-[#274239] rounded-md m-4 flex flex-col items-center">
+            <h3>Error loading advocates</h3>
             <p>{error}</p>
             <button 
               onClick={() => window.location.reload()} 
-              className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer"
+              className="px-4 py-2 mt-3 bg-[#274239] text-white rounded-md cursor-pointer"
             >
               Try Again
             </button>
@@ -150,9 +150,9 @@ export default function Home() {
             placeholder="Search advocates..."
             value={searchTerm}
             onChange={onChange} 
-            className="border-b border-t-0 border-l-0 border-r-0 border-black mr-4"
+            className="border-b border-t-0 border-l-0 border-r-0 border-black mr-4 focus:outline-none"
           />
-          <button type="button" onClick={onClick}>Reset Search</button>
+          <button className="text-sm text-[white] bg-[#274239] rounded-md px-2 py-1 border border-[#274239]" onClick={onClick}>Reset Search</button>
         </form>
         <br />
         <br />
@@ -196,7 +196,7 @@ export default function Home() {
   }
 
   return (
-    <main>
+    <main className="flex flex-col items-center">
       <h1 className="text-2xl font-bold text-white py-4 mb-[2em] flex justify-center items-center bg-[#274239] w-full h-[100px]">
         Solace Advocates
       </h1>
