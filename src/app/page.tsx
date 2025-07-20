@@ -120,86 +120,87 @@ export default function Home() {
     return pages;
   };
 
-  if (isLoading) {
+  const renderTable = () => {
+    if (isLoading) {
+      return (
+          <div className="flex justify-center items-center h-40 text-lg">
+            Loading advocates...
+          </div>
+      );
+    }
+    if (error) {
+      return (
+          <div className="text-red-500 p-4 border border-red-500 rounded-md m-4">
+            <h3>Error loading advocates:</h3>
+            <p>{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer"
+            >
+              Try Again
+            </button>
+          </div>
+      );
+    }
     return (
-      <main className="m-4">
-        <h1>Solace Advocates</h1>
-        <div className="flex justify-center items-center h-40 text-lg">
-          Loading advocates...
-        </div>
-      </main>
-    );
-  }
-  if (error) {
-    return (
-      <main className="m-4">
-        <h1>Solace Advocates</h1>
-        <div className="text-red-500 p-4 border border-red-500 rounded-md m-4">
-          <h3>Error loading advocates:</h3>
-          <p>{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer"
-          >
-            Try Again
-          </button>
-        </div>
-      </main>
-    );
+      <div className="m-4">
+        <form>
+          <input 
+            type="search"
+            placeholder="Search advocates..."
+            value={searchTerm}
+            onChange={onChange} 
+            className="border-b border-t-0 border-l-0 border-r-0 border-black mr-4"
+          />
+          <button type="button" onClick={onClick}>Reset Search</button>
+        </form>
+        <br />
+        <br />
+        {filteredAdvocates.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "20px" }}>
+            No advocates found matching your search criteria.
+          </div>
+        ) : (
+          <>
+            <table className="table-auto border-collapse border border-gray-300 table-bordered">
+              <thead>
+                <tr>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>City</th>
+                  <th>Degree</th>
+                  <th>Specialties</th>
+                  <th>Years of Experience</th>
+                  <th>Phone Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAdvocates.map((advocate, index) => (
+                  <TableRow key={index} advocate={advocate} />
+                ))}
+              </tbody>
+            </table>
+            
+            <div className="flex justify-center items-center py-4 gap-4">
+              <div style={{ fontSize: "14px", color: "#666" }}>
+                Page {pagination.page} of {pagination.totalPages} ({pagination.total} total records)
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {renderPaginationControls()}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    )
   }
 
   return (
-    <main className="m-4">
-      <h1>Solace Advocates</h1>
-      <br />
-      <br />
-      <form>
-        <input 
-          type="search"
-          placeholder="Search advocates..."
-          value={searchTerm}
-          onChange={onChange} 
-          className="border-b border-t-0 border-l-0 border-r-0 border-black mr-4"
-        />
-        <button type="button" onClick={onClick}>Reset Search</button>
-      </form>
-      <br />
-      <br />
-      {filteredAdvocates.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "20px" }}>
-          No advocates found matching your search criteria.
-        </div>
-      ) : (
-        <>
-          <table className="table-auto border-collapse border border-gray-300 table-bordered">
-            <thead>
-              <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>City</th>
-                <th>Degree</th>
-                <th>Specialties</th>
-                <th>Years of Experience</th>
-                <th>Phone Number</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAdvocates.map((advocate, index) => (
-                <TableRow key={index} advocate={advocate} />
-              ))}
-            </tbody>
-          </table>
-          
-          <div className="flex justify-center items-center py-4 gap-4">
-            <div style={{ fontSize: "14px", color: "#666" }}>
-              Page {pagination.page} of {pagination.totalPages} ({pagination.total} total records)
-            </div>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              {renderPaginationControls()}
-            </div>
-          </div>
-        </>
-      )}
+    <main>
+      <h1 className="text-2xl font-bold text-white py-4 mb-[2em] flex justify-center items-center bg-[#274239] w-full h-[100px]">
+        Solace Advocates
+      </h1>
+      {renderTable()}
     </main>
-  );
+    );
 }
