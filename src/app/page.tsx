@@ -98,7 +98,7 @@ export default function Home() {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`px-3 py-1 rounded-md ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-white text-black'}`}
+          className={`px-3 py-1 rounded-md ${i === currentPage ? 'bg-[#274239] text-white' : 'bg-white text-black'}`}
         >
           {i}
         </button>
@@ -163,7 +163,7 @@ export default function Home() {
         ) : (
           <>
             <table className="table-auto border-collapse border border-gray-300 table-bordered">
-              <thead>
+              <thead className="bg-[#274239] text-white">
                 <tr>
                   <th>First Name</th>
                   <th>Last Name</th>
@@ -182,10 +182,10 @@ export default function Home() {
             </table>
             
             <div className="flex justify-center items-center py-4 gap-4">
-              <div style={{ fontSize: "14px", color: "#666" }}>
+              <div className="text-sm text-[#666]">
                 Page {pagination.page} of {pagination.totalPages} ({pagination.total} total records)
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div className="flex items-center">
                 {renderPaginationControls()}
               </div>
             </div>
