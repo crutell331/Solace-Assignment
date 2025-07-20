@@ -1,41 +1,37 @@
-## Solace Candidate Assignment
+# Solace Candidate Assignment
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Key Improvements
 
-## Getting Started
+### **Frontend**
 
-Install dependencies
+#### **TypeScript**
+- Full TypeScript implementation with proper interfaces
 
-```bash
-npm i
-```
+#### **Styling**
+- Tailwind CSS with consistent design theme
 
-Run the development server:
+#### **React Architecture**
+-  Modular component architecture
+- Extracted `TableRow` component for reusability
+- Proper prop typing and component separation
+- Clean, maintainable code structure
 
-```bash
-npm run dev
-```
+#### **UX**
+- Loading & Error states
+- Error handling
+- Accessibility compliance
 
-## Database set up
+### **Backend**
 
-The app is configured to return a default list of advocates. This will allow you to get the app up and running without needing to configure a database. If you’d like to configure a database, you’re encouraged to do so. You can uncomment the url in `.env` and the line in `src/app/api/advocates/route.ts` to test retrieving advocates from the database.
+#### **API**
+- Handle live, RESTful, requests
 
-1. Feel free to use whatever configuration of postgres you like. The project is set up to use docker-compose.yml to set up postgres. The url is in .env.
+### **Performance Optimizations**
 
-```bash
-docker compose up -d
-```
+#### **Search Optimization**
+- Debounce to prevent excessive API calls
+- Moved filtering logic to server
 
-2. Create a `solaceassignment` database.
-
-3. Push migration to the database
-
-```bash
-npx drizzle-kit push
-```
-
-4. Seed the database
-
-```bash
-curl -X POST http://localhost:3000/api/seed
-```
+#### **State Management**
+- Correct useEffect dependency arrays
+- Correct state management for the search form, as well as, other actions
