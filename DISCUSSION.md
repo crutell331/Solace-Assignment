@@ -11,7 +11,7 @@
 - Advocate show page
 
 ## Added Context
-- 3 available PRs opened agains `main` branch
+- 3 available PRs opened against `main` branch
 - Branches are scoped to specific category of improvements and created in this order: 
     1. `components_and_typescript`
     2. `backend_changes` 
